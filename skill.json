@@ -1,0 +1,39 @@
+{
+  "name": "genpark-sierra-enterprise-customer-agent-empathic-resolver-skill",
+  "version": "1.0.0",
+  "description": "Sierra-inspired Conversational Enterprise Customer Agent & Empathic Resolver. Conducts sentiment de-escalation, enforces strict enterprise policy guardrails, and executes two-phase commit transactional workflows (refunds, order updates, booking changes) without conversational hallucinations.",
+  "homepage": "https://www.genpark.ai",
+  "linkedin": "https://www.llinkedin.com/company/92955550",
+  "tools": [
+    {
+      "name": "resolve_customer_inquiry",
+      "description": "Execute Sierra-style empathetic customer conversation, policy check, and transactional task.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "customer_message": {
+            "type": "string",
+            "description": "Customer incoming text."
+          },
+          "order_context": {
+            "type": "object",
+            "description": "Order records and shipping status."
+          },
+          "action_requested": {
+            "type": "string",
+            "enum": [
+              "refund_request",
+              "address_change",
+              "order_status",
+              "general_inquiry"
+            ]
+          }
+        },
+        "required": [
+          "customer_message",
+          "action_requested"
+        ]
+      }
+    }
+  ]
+}
