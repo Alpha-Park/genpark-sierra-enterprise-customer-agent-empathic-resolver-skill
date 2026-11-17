@@ -3,6 +3,20 @@ import json
 import sys
 from client import SierraEnterpriseCustomerAgentEmpathicResolver
 
+from typing import Any, Dict, List, Optional
+
+try:
+    from mcp.server.fastmcp import FastMCP
+except ImportError as exc:
+    raise SystemExit("MCP requires the mcp package. Run: python -m pip install -r requirements.txt") from exc
+
+mcp = FastMCP('genpark-sierra-enterprise-customer-agent-empathic-resolver-skill')
+
+@mcp.tool()
+def resolve_customer_inquiry(customer_message: str = "", action_requested: str = "", order_context: Optional[Dict[str, Any]] = None) -> str:
+    """Resolve a customer inquiry using the existing sentiment and policy checks."""
+    return json.dumps(SierraEnterpriseCustomerAgentEmpathicResolver().resolve_customer_inquiry(customer_message, action_requested, order_context if order_context is not None else {}))
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         resolver = SierraEnterpriseCustomerAgentEmpathicResolver()
@@ -14,28 +28,7 @@ def main():
         print(f"[TEST PASS] Sierra Customer Agent Passed! Status: {res['final_status']}")
         sys.exit(0)
 
-    for line in sys.stdin:
-        if not line.strip():
-            continue
-        try:
-            req = json.loads(line)
-            method = req.get("method")
-            msg_id = req.get("id")
-            if method == "initialize":
-                print(json.dumps({"jsonrpc": "2.0", "id": msg_id, "result": {"serverInfo": {"name": "genpark-sierra-agent", "version": "1.0.0"}}}))
-            elif method == "tools/list":
-                print(json.dumps({"jsonrpc": "2.0", "id": msg_id, "result": {"tools": [{"name": "resolve_customer_inquiry", "description": "Sierra customer support agent with empathetic resolution and policy guardrails"}]}}))
-            elif method == "tools/call":
-                args = req.get("params", {}).get("arguments", {})
-                resolver = SierraEnterpriseCustomerAgentEmpathicResolver()
-                out = resolver.resolve_customer_inquiry(args.get("customer_message", ""), args.get("action_requested", ""), args.get("order_context", {}))
-                print(json.dumps({"jsonrpc": "2.0", "id": msg_id, "result": {"content": [{"type": "text", "text": json.dumps(out)}]}}))
-            else:
-                print(json.dumps({"jsonrpc": "2.0", "id": msg_id, "error": {"code": -32601, "message": "Method not found"}}))
-            sys.stdout.flush()
-        except Exception as e:
-            print(json.dumps({"jsonrpc": "2.0", "error": {"code": -32603, "message": str(e)}}))
-            sys.stdout.flush()
+    mcp.run(transport="stdio")
 
 if __name__ == "__main__":
     main()

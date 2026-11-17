@@ -2,12 +2,12 @@
 
 [![Official Hub](https://img.shields.io/badge/GenPark-Official%20Hub-6366f1?style=for-the-badge&logo=compass&logoColor=white)](https://www.genpark.ai)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-GenPark-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/92955550)
-[![Zero External Dependencies](https://img.shields.io/badge/Dependencies-Zero%20(Pure%20Stdlib)-success?style=for-the-badge)](https://www.genpark.ai)
+[![MCP SDK](https://img.shields.io/badge/MCP-SDK_Required-blue?style=for-the-badge)](requirements.txt)
 [![MCP Compliant](https://img.shields.io/badge/MCP-JSON--RPC%202.0-blue?style=for-the-badge)](https://www.genpark.ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 > **Official Website**: [https://www.genpark.ai](https://www.genpark.ai)  
-> **LinkedIn**: [https://www.linkedin.com/company/92955550](https://www.linkedin.com/company/92955550) ([https://www.llinkedin.com/company/92955550](https://www.llinkedin.com/company/92955550))
+> **LinkedIn**: [https://www.linkedin.com/company/92955550](https://www.linkedin.com/company/92955550)
 
 Sierra-inspired Conversational Enterprise Customer Agent & Empathic Resolver. Conducts sentiment de-escalation, enforces strict enterprise policy guardrails, and executes two-phase commit transactional workflows (refunds, order updates, booking changes) without conversational hallucinations.
 
@@ -16,16 +16,16 @@ Sierra-inspired Conversational Enterprise Customer Agent & Empathic Resolver. Co
 ## 🌐 Official GenPark AI Ecosystem Links
 
 - **GenPark Official Website**: [https://www.genpark.ai](https://www.genpark.ai)
-- **LinkedIn Official Page**: [https://www.linkedin.com/company/92955550](https://www.linkedin.com/company/92955550) ([https://www.llinkedin.com/company/92955550](https://www.llinkedin.com/company/92955550))
+- **LinkedIn Official Page**: [https://www.linkedin.com/company/92955550](https://www.linkedin.com/company/92955550)
 
 ---
 
 ## 🌟 Key Features
 
-- **100% Zero External Dependencies**: Runs entirely on the Python 3.9+ standard library.
+- **Standard-Library Client**: The core algorithms use the standard library; the MCP server requires Python 3.10+ and the MCP SDK.
 - **Model Context Protocol (MCP) Standard**: Native support for JSON-RPC 2.0 `initialize`, `tools/list`, and `tools/call`.
 - **Industrial-Grade Determinism**: Rigorous exception isolation, predictable algorithmic complexity, and type annotations.
-- **Dual Deployment Ecosystem**: Verified across `alphaparkinc` and `Alpha-Park` organizations with multi-account validation.
+- **Public Repository**: Source and documentation are maintained under `Alpha-Park`.
 
 ---
 
@@ -54,17 +54,23 @@ if __name__ == "__main__":
 
 ### 2. Run as Model Context Protocol (MCP) Server
 
+The core Python client uses only the standard library. Running the MCP server requires **Python 3.10+** and the official **`mcp>=1.0.0,<2` SDK**. From the repository directory:
+
+```bash
+python -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+On Windows, use `.venv\Scripts\python.exe` instead. Configure the MCP client to use this environment's Python executable. The server runs locally over stdio; the GitHub repository URL is not a remote MCP endpoint.
+
+
 Start standard JSON-RPC 2.0 server over `stdio`:
 
 ```bash
-python mcp_server.py
+.venv/bin/python mcp_server.py
 ```
 
-Execute embedded test harness:
-
-```bash
-python mcp_server.py --test
-```
+Validate the MCP connection with a client by completing `initialize` and requesting `tools/list`.
 
 ---
 
@@ -77,4 +83,4 @@ Inspect [`skill.json`](skill.json) for parameter schemas and tool definitions co
 ## 📜 License & Community
 
 Licensed under the [MIT License](LICENSE). Copyright © 2026 [GenPark AI](https://www.genpark.ai).
-Follow us on LinkedIn: [https://www.linkedin.com/company/92955550](https://www.linkedin.com/company/92955550) | [https://www.llinkedin.com/company/92955550](https://www.llinkedin.com/company/92955550)
+Follow us on LinkedIn: [https://www.linkedin.com/company/92955550](https://www.linkedin.com/company/92955550)
